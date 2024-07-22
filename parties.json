@@ -1,5 +1,5 @@
 [
-    { "itemName": "Item 1", "itemCode": "001" },
-    { "itemName": "Item 2", "itemCode": "002" },
-    { "itemName": "Item 3", "itemCode": "003" }
+    { "partyName": "Party A", "partyCode": "001" },
+    { "partyName": "Party B", "partyCode": "002" },
+    { "partyName": "Party C", "partyCode": "003" }
 ]
