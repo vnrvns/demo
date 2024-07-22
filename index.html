@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Order Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/parties')
+                .then(response => response.json())
+                .then(partyData => {
+                    const partyNameInput = document.getElementById('partyNameInput');
+                    const partyCodeInput = document.getElementById('partyCodeInput');
+                    const partyList = document.getElementById('partyList');
+
+                    partyNameInput.addEventListener('input', function() {
+                        const query = this.value.toLowerCase();
+                        partyList.innerHTML = '';
+                        if (query) {
+                            const filteredParties = partyData.filter(party => party.partyName.toLowerCase().includes(query));
+                            filteredParties.forEach(party => {
+                                const li = document.createElement('li');
+                                li.textContent = party.partyName;
+                                li.dataset.partyCode = party.partyCode;
+                                li.addEventListener('click', function() {
+                                    partyNameInput.value = this.textContent;
+                                    partyCodeInput.value = this.dataset.partyCode;
+                                    partyList.innerHTML = '';
+                                    partyList.style.display = 'none';
+                                });
+                                partyList.appendChild(li);
+                            });
+                            partyList.style.display = filteredParties.length > 0 ? 'block' : 'none';
+                        } else {
+                            partyList.style.display = 'none';
+                        }
+                    });
+
+                    partyNameInput.addEventListener('change', function() {
+                        const selectedParty = partyData.find(party => party.partyName === this.value);
+                        if (selectedParty) {
+                            partyCodeInput.value = selectedParty.partyCode;
+                        }
+                    });
+
+                    partyCodeInput.addEventListener('change', function() {
+                        const selectedParty = partyData.find(party => party.partyCode === this.value);
+                        if (selectedParty) {
+                            partyNameInput.value = selectedParty.partyName;
+                        }
+                    });
+                });
+        });
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Party Order Form</h2>
+        <form action="/submit_order" method="post">
+            <label for="partyNameInput">Party Name:</label>
+            <input type="text" id="partyNameInput" name="partyName" required autocomplete="off">
+            <ul id="partyList"></ul>
+
+            <label for="partyCodeInput">Party Code:</label>
+            <input type="text" id="partyCodeInput" name="partyCode" required autocomplete="off">
+
+            <label for="itemQuantity">Item Quantity:</label>
+            <input type="number" id="itemQuantity" name="itemQuantity" min="1" required>
+
+            <button type="submit">Submit Order</button>
+        </form>
+    </div>
+</body>
+</html>
