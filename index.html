@@ -7,63 +7,119 @@
     <link rel="stylesheet" href="style.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/parties')
-                .then(response => response.json())
-                .then(partyData => {
-                    const partyNameInput = document.getElementById('partyNameInput');
-                    const partyCodeInput = document.getElementById('partyCodeInput');
-                    const partyList = document.getElementById('partyList');
+            const parties = [
+                { "partyName": "Party A", "partyCode": "001" },
+                { "partyName": "Party B", "partyCode": "002" },
+                { "partyName": "Party C", "partyCode": "003" }
+            ];
 
-                    partyNameInput.addEventListener('input', function() {
-                        const query = this.value.toLowerCase();
-                        partyList.innerHTML = '';
-                        if (query) {
-                            const filteredParties = partyData.filter(party => party.partyName.toLowerCase().includes(query));
-                            filteredParties.forEach(party => {
-                                const li = document.createElement('li');
-                                li.textContent = party.partyName;
-                                li.dataset.partyCode = party.partyCode;
-                                li.addEventListener('click', function() {
-                                    partyNameInput.value = this.textContent;
-                                    partyCodeInput.value = this.dataset.partyCode;
-                                    partyList.innerHTML = '';
-                                    partyList.style.display = 'none';
-                                });
-                                partyList.appendChild(li);
-                            });
-                            partyList.style.display = filteredParties.length > 0 ? 'block' : 'none';
-                        } else {
+            const items = [
+                { "itemName": "Item 1", "itemCode": "001" },
+                { "itemName": "Item 2", "itemCode": "002" },
+                { "itemName": "Item 3", "itemCode": "003" }
+            ];
+
+            const partyNameInput = document.getElementById('partyNameInput');
+            const partyCodeInput = document.getElementById('partyCodeInput');
+            const partyList = document.getElementById('partyList');
+
+            partyNameInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                partyList.innerHTML = '';
+                if (query) {
+                    const filteredParties = parties.filter(party => party.partyName.toLowerCase().includes(query));
+                    filteredParties.forEach(party => {
+                        const li = document.createElement('li');
+                        li.textContent = party.partyName;
+                        li.dataset.partyCode = party.partyCode;
+                        li.addEventListener('click', function() {
+                            partyNameInput.value = this.textContent;
+                            partyCodeInput.value = this.dataset.partyCode;
+                            partyList.innerHTML = '';
                             partyList.style.display = 'none';
-                        }
+                        });
+                        partyList.appendChild(li);
                     });
+                    partyList.style.display = filteredParties.length > 0 ? 'block' : 'none';
+                } else {
+                    partyList.style.display = 'none';
+                }
+            });
 
-                    partyNameInput.addEventListener('change', function() {
-                        const selectedParty = partyData.find(party => party.partyName === this.value);
-                        if (selectedParty) {
-                            partyCodeInput.value = selectedParty.partyCode;
-                        }
-                    });
+            partyNameInput.addEventListener('change', function() {
+                const selectedParty = parties.find(party => party.partyName === this.value);
+                if (selectedParty) {
+                    partyCodeInput.value = selectedParty.partyCode;
+                }
+            });
 
-                    partyCodeInput.addEventListener('change', function() {
-                        const selectedParty = partyData.find(party => party.partyCode === this.value);
-                        if (selectedParty) {
-                            partyNameInput.value = selectedParty.partyName;
-                        }
+            partyCodeInput.addEventListener('change', function() {
+                const selectedParty = parties.find(party => party.partyCode === this.value);
+                if (selectedParty) {
+                    partyNameInput.value = selectedParty.partyName;
+                }
+            });
+
+            const itemNameInput = document.getElementById('itemNameInput');
+            const itemCodeInput = document.getElementById('itemCodeInput');
+            const itemList = document.getElementById('itemList');
+
+            itemNameInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                itemList.innerHTML = '';
+                if (query) {
+                    const filteredItems = items.filter(item => item.itemName.toLowerCase().includes(query));
+                    filteredItems.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.itemName;
+                        li.dataset.itemCode = item.itemCode;
+                        li.addEventListener('click', function() {
+                            itemNameInput.value = this.textContent;
+                            itemCodeInput.value = this.dataset.itemCode;
+                            itemList.innerHTML = '';
+                            itemList.style.display = 'none';
+                        });
+                        itemList.appendChild(li);
                     });
-                });
+                    itemList.style.display = filteredItems.length > 0 ? 'block' : 'none';
+                } else {
+                    itemList.style.display = 'none';
+                }
+            });
+
+            itemNameInput.addEventListener('change', function() {
+                const selectedItem = items.find(item => item.itemName === this.value);
+                if (selectedItem) {
+                    itemCodeInput.value = selectedItem.itemCode;
+                }
+            });
+
+            itemCodeInput.addEventListener('change', function() {
+                const selectedItem = items.find(item => item.itemCode === this.value);
+                if (selectedItem) {
+                    itemNameInput.value = selectedItem.itemName;
+                }
+            });
         });
     </script>
 </head>
 <body>
     <div class="form-container">
         <h2>Party Order Form</h2>
-        <form action="/submit_order" method="post">
+        <form action="https://formsubmit.co/YOUR_EMAIL_ADDRESS" method="post">
             <label for="partyNameInput">Party Name:</label>
             <input type="text" id="partyNameInput" name="partyName" required autocomplete="off">
             <ul id="partyList"></ul>
 
             <label for="partyCodeInput">Party Code:</label>
             <input type="text" id="partyCodeInput" name="partyCode" required autocomplete="off">
+
+            <label for="itemNameInput">Item Name:</label>
+            <input type="text" id="itemNameInput" name="itemName" required autocomplete="off">
+            <ul id="itemList"></ul>
+
+            <label for="itemCodeInput">Item Code:</label>
+            <input type="text" id="itemCodeInput" name="itemCode" required autocomplete="off">
 
             <label for="itemQuantity">Item Quantity:</label>
             <input type="number" id="itemQuantity" name="itemQuantity" min="1" required>
